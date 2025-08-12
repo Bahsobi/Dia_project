@@ -213,7 +213,7 @@ if prediction == 1:
     """)
 else:
     st.success(f"""
-        ✅ **Prediction: No Diabetes/Prediabetes**
+        ✅ **Prediction: No Diabetes Retinopathy**
 
         🧮 **Probability:** {probability:.2%}  
         🎲 **Odds:** {odds_value:.2f}
