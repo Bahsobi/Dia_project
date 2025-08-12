@@ -58,21 +58,22 @@ st.info('Predict the **Diabetes Retinopathy** status based on health data using 
 
 
 # ---------- Load and Preprocess Data ----------
+# ---------- Load and Preprocess Data ----------
 @st.cache_data
 def load_data():
     url = "https://github.com/Bahsobi/Diabetic_Retinopathy/raw/refs/heads/main/filtered_data_correcte.xlsx"
     df = pd.read_excel(url)
-  # Mapping categorical values
 
-df['Hypertension'] = df['Hypertension'].map({
-    0: "No",
-    1: "Yes"
-})
-
+    # Mapping categorical values
+    df['Hypertension'] = df['Hypertension'].map({
+        0: "No",
+        1: "Yes"
+    })
 
     return df
 
 df = load_data()
+
 
 
 
