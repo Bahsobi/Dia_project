@@ -96,14 +96,33 @@ preprocessor = ColumnTransformer([
     ('num', StandardScaler(), numerical_features)
 ])
 
-# ---------- XGBoost Pipeline ----------
-model = Pipeline([
-    ('prep', preprocessor),
-    ('xgb', XGBClassifier(use_label_encoder=False, eval_metric='logloss', random_state=42))
-])
 
+
+# ---------- Cached Model Training ----------
+@st.cache_resource
+def train_xgb_model(X_train, y_train, preprocessor):
+    model = Pipeline([
+        ('prep', preprocessor),
+        ('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+    ])
+    model.fit(X_train, y_train)
+    return model
+
+@st.cache_resource
+def train_logreg_model(X_train, y_train, preprocessor):
+    odds_pipeline = Pipeline([
+        ('prep', preprocessor),
+        ('logreg', LogisticRegression(max_iter=1000))
+    ])
+    odds_pipeline.fit(X_train, y_train)
+    return odds_pipeline
+
+# ---------- Train/Test Split ----------
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
-model.fit(X_train, y_train)
+
+# ---------- Train Models (Cached) ----------
+model = train_xgb_model(X_train, y_train, preprocessor)
+odds_pipeline = train_logreg_model(X_train, y_train, preprocessor)
 
 # ---------- Feature Importance ----------
 xgb_model = model.named_steps['xgb']
@@ -114,24 +133,12 @@ importance_df = pd.DataFrame({
     'Importance': xgb_model.feature_importances_
 }).sort_values(by='Importance', ascending=False)
 
-
 # ---------- Logistic Regression for Odds Ratio ----------
-odds_pipeline = Pipeline([
-    ('prep', preprocessor),
-    ('logreg', LogisticRegression(max_iter=1000))
-])
-odds_pipeline.fit(X_train, y_train)
 log_model = odds_pipeline.named_steps['logreg']
 odds_df = pd.DataFrame({
     'Feature': feature_names,
     'Odds Ratio': np.exp(log_model.coef_[0])
 }).sort_values(by='Odds Ratio', ascending=False)
-
-
-
-
-
-
 
 
 
@@ -258,7 +265,15 @@ or_df = pd.DataFrame({
 st.dataframe(or_df.set_index('Quartile').style.format("{:.2f}"))
 
 fig3, ax3 = plt.subplots()
-sns.pointplot(data=or_df, x='Quartile', y='Odds Ratio', join=False, capsize=0.2, errwidth=1.5)
+sns.pointplot(
+    data=or_df,
+    x='Quartile',
+    y='Odds Ratio',
+    capsize=0.2,
+    linestyle='none',
+    err_kws={'linewidth': 1.5}
+)
+
 ax3.axhline(1, linestyle='--', color='gray')
 ax3.set_title("Odds Ratios for Diabetes/Prediabetes by eGDR Quartiles")
 st.pyplot(fig3)
