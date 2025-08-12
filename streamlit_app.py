@@ -98,48 +98,37 @@ preprocessor = ColumnTransformer([
 
 
 
-# ---------- Cached Model Training ----------
-@st.cache_resource
-def train_xgb_model(X_train, y_train, preprocessor):
-    model = Pipeline([
-        ('prep', preprocessor),
-        ('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
-    ])
-    model.fit(X_train, y_train)
-    return model
 
-@st.cache_resource
-def train_logreg_model(X_train, y_train, preprocessor):
-    odds_pipeline = Pipeline([
-        ('prep', preprocessor),
-        ('logreg', LogisticRegression(max_iter=1000))
-    ])
-    odds_pipeline.fit(X_train, y_train)
-    return odds_pipeline
 
-# ---------- Train/Test Split ----------
+# ---------- XGBoost Pipeline ----------
+model = Pipeline([ 
+('prep', preprocessor), 
+('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
-
-# ---------- Train Models (Cached) ----------
-model = train_xgb_model(X_train, y_train, preprocessor)
-odds_pipeline = train_logreg_model(X_train, y_train, preprocessor)
+model.fit(X_train, y_train)
 
 # ---------- Feature Importance ----------
 xgb_model = model.named_steps['xgb']
 encoder = model.named_steps['prep'].named_transformers_['cat']
 feature_names = encoder.get_feature_names_out(categorical_features).tolist() + numerical_features
-importance_df = pd.DataFrame({
-    'Feature': feature_names,
-    'Importance': xgb_model.feature_importances_
+importance_df = pd.DataFrame({ 
+'Feature': feature_names, 
+'Importance': xgb_model.feature_importances_
 }).sort_values(by='Importance', ascending=False)
 
-# ---------- Logistic Regression for Odds Ratio ----------
-log_model = odds_pipeline.named_steps['logreg']
-odds_df = pd.DataFrame({
-    'Feature': feature_names,
-    'Odds Ratio': np.exp(log_model.coef_[0])
-}).sort_values(by='Odds Ratio', ascending=False)
 
+# ---------- Logistic Regression for Odds Ratio ----------
+odds_pipeline = Pipeline([ 
+('prep', preprocessor), 
+('logreg', LogisticRegression(max_iter=1000))
+])
+odds_pipeline.fit(X_train, y_train)
+log_model = odds_pipeline.named_steps['logreg']
+odds_df = pd.DataFrame({ 
+'Feature': feature_names, 
+'Odds Ratio': np.exp(log_model.coef_[0])
+}).sort_values(by='Odds Ratio', ascending=False)
 
 
 
