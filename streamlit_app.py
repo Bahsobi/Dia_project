@@ -104,7 +104,15 @@ preprocessor = ColumnTransformer([
 # ---------- XGBoost Pipeline ----------
 model = Pipeline([ 
     ('prep', preprocessor), 
-    ('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+   ('xgb', XGBClassifier(
+    n_estimators=100,   # پیش‌فرض 100 است، میتونی کمترش کنی مثل 50 یا حتی 30
+    max_depth=3,        # پیش‌فرض 6 است، عمق کمتر سرعت رو زیاد می‌کنه
+    learning_rate=0.1,  # می‌تونی کمتر یا بیشتر بسته به نیاز بزاری
+    n_jobs=-1,          # استفاده از همه هسته‌های CPU
+    eval_metric='logloss',
+    random_state=42
+))
+
 ])
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
