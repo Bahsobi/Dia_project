@@ -101,11 +101,14 @@ preprocessor = ColumnTransformer([
 
 
 # ---------- XGBoost Pipeline ----------
+# ---------- XGBoost Pipeline ----------
 model = Pipeline([ 
-('prep', preprocessor), 
-('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+    ('prep', preprocessor), 
+    ('xgb', XGBClassifier(eval_metric='logloss', random_state=42))
+])
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, stratify=y, random_state=42)
+
 model.fit(X_train, y_train)
 
 # ---------- Feature Importance ----------
