@@ -63,7 +63,8 @@ def load_data():
     url = "https://github.com/Bahsobi/Diabetic_Retinopathy/raw/refs/heads/main/filtered_data_correcte.xlsx"
     df = pd.read_excel(url)
   # Mapping categorical values
-  df['Hypertension'] = df['Hypertension'].map({
+
+df['Hypertension'] = df['Hypertension'].map({
     0: "No",
     1: "Yes"
 })
