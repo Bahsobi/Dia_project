@@ -102,7 +102,6 @@ preprocessor = ColumnTransformer([
 
 # ---------- XGBoost Pipeline ----------
 # ---------- XGBoost Pipeline ----------
-@st.cache_resource
 model = Pipeline([ 
     ('prep', preprocessor), 
    ('xgb', XGBClassifier(
