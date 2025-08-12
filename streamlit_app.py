@@ -58,7 +58,6 @@ st.info('Predict the **Diabetes Retinopathy** status based on health data using 
 
 
 # ---------- Load and Preprocess Data ----------
-# ---------- Load and Preprocess Data ----------
 @st.cache_data
 def load_data():
     url = "https://github.com/Bahsobi/Diabetic_Retinopathy/raw/refs/heads/main/filtered_data_correcte.xlsx"
@@ -80,7 +79,7 @@ df = load_data()
 #################################################
 
 # ---------- Features ----------
-target = 'target = 'Retinopathy'
+target = 'Retinopathy'
 
 categorical_features = ['Hypertension']
 numerical_features = ['Age', 'BMI', 'Total_Cholesterol', 'Triglycerides', 
