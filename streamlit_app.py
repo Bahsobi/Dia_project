@@ -232,7 +232,7 @@ odds_value = probability / (1 - probability)
 # ---------- Display Result ----------
 if prediction == 1:
     st.error(f"""
-        ⚠️ **Prediction: Diabetes/Prediabetes**
+        ⚠️ **Prediction: Diabetes Retinopathy**
 
         🧮 **Probability:** {probability:.2%}  
         🎲 **Odds:** {odds_value:.2f}
