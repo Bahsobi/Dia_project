@@ -1,3 +1,4 @@
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -11,22 +12,22 @@ from sklearn.linear_model import LogisticRegression
 import seaborn as sns
 import statsmodels.api as sm
 
-
-# ---------- Custom Styling ----------
+# ---------- Custom Styling (Blue Theme) ----------
 st.markdown(
     """
     <style>
         .stApp {
-            background-color: #C8A2D4;  /* Lilac color */
+            background-color: #e0f7fa;  /* Light Blue */
         }
         .stSidebar {
-            background-color: #D1A7D5;  /* A lighter lilac color for sidebar */
+            background-color: #b2ebf2;  /* Sidebar Blue */
         }
     </style>
     """,
     unsafe_allow_html=True
 )
 
+# ---------- Header ----------
 # ---------- Header ----------
 st.markdown(
     """
