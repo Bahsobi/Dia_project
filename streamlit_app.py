@@ -1,4 +1,3 @@
-
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -171,7 +170,7 @@ odds_df = pd.DataFrame({
 
 ################################################################################
 # ---------- Sidebar Input ----------
-st.sidebar.header("📝 Input Data")
+st.sidebar.header("📝 Input Individual Data")
 
 
 
