@@ -285,15 +285,7 @@ or_df = pd.DataFrame({
 st.dataframe(or_df.set_index('Quartile').style.format("{:.2f}"))
 
 fig3, ax3 = plt.subplots()
-sns.pointplot(
-    data=or_df,
-    x='Quartile',
-    y='Odds Ratio',
-    capsize=0.2,
-    linestyle='none',
-    err_kws={'linewidth': 1.5}
-)
-
+sns.pointplot(data=or_df, x='Quartile', y='Odds Ratio', join=False, capsize=0.2, errwidth=1.5)
 ax3.axhline(1, linestyle='--', color='gray')
 ax3.set_title("Odds Ratios for Diabetes/Prediabetes by eGDR Quartiles")
 st.pyplot(fig3)
